@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Städföretag i Sverige</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --navy:   #1F3864;
+    --blue:   #2E75B6;
+    --green:  #538135;
+    --green2: #70AD47;
+    --adj:    #C6E0B4;
+    --adj-dk: #375623;
+    --amber:  #FFE699;
+    --amber-dk: #7F6000;
+    --bg:     #F4F5F7;
+    --surface:#FFFFFF;
+    --border: #E0E3E8;
+    --text:   #1A1A2E;
+    --muted:  #6B7280;
+    --red:    #CC0000;
+    --col-w:  38px;
+  }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+  }
+
+  /* ── HEADER ── */
+  header {
+    background: var(--navy);
+    padding: 2.5rem 2rem 2rem;
+    position: relative;
+    overflow: hidden;
+  }
+  header::before {
+    content: '';
+    position: absolute;
+    top: -60px; right: -40px;
+    width: 280px; height: 280px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.04);
+  }
+  header::after {
+    content: '';
+    position: absolute;
+    bottom: -80px; right: 120px;
+    width: 200px; height: 200px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.03);
+  }
+  .header-inner { max-width: 1400px; margin: 0 auto; position: relative; z-index: 1; }
+  header h1 {
+    font-family: 'Bricolage Grotesque', sans-serif;
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: -0.02em;
+    margin-bottom: 0.4rem;
+  }
+  header p {
+    color: rgba(255,255,255,0.55);
+    font-size: 0.875rem;
+    font-weight: 300;
+  }
+
+  /* ── STATS BAR ── */
+  .stats-bar {
+    background: #162D56;
+    padding: 1rem 2rem;
+    display: flex;
+    gap: 2.5rem;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+  }
+  .stats-bar > div { max-width: 1400px; margin: 0 auto; display: flex; gap: 2.5rem; width: 100%; }
+  .stat { display: flex; align-items: baseline; gap: 0.5rem; }
+  .stat-num {
+    font-family: 'Bricolage Grotesque', sans-serif;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #fff;
+  }
+  .stat-label { font-size: 0.78rem; color: rgba(255,255,255,0.45); text-transform: uppercase; letter-spacing: 0.08em; }
+
+  /* ── CONTROLS ── */
+  .controls {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 1.25rem 2rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+  .search-wrap {
+    position: relative;
+    flex: 0 0 280px;
+  }
+  .search-wrap svg {
+    position: absolute;
+    left: 10px; top: 50%;
+    transform: translateY(-50%);
+    color: var(--muted);
+    width: 16px; height: 16px;
+  }
+  #search {
+    width: 100%;
+    padding: 0.5rem 0.75rem 0.5rem 2rem;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--surface);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.875rem;
+    color: var(--text);
+    outline: none;
+    transition: border-color 0.15s;
+  }
+  #search:focus { border-color: var(--blue); }
+  #search::placeholder { color: var(--muted); }
+
+  .filter-group { display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap; }
+  .filter-label { font-size: 0.78rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; font-weight: 500; }
+  .filter-btn {
+    padding: 0.3rem 0.75rem;
+    border-radius: 20px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.78rem;
+    color: var(--muted);
+    cursor: pointer;
+    transition: all 0.15s;
+    white-space: nowrap;
+  }
+  .filter-btn:hover { border-color: var(--blue); color: var(--blue); }
+  .filter-btn.active { background: var(--navy); border-color: var(--navy); color: #fff; }
+
+  .count-badge {
+    margin-left: auto;
+    font-size: 0.78rem;
+    color: var(--muted);
+    background: var(--surface);
+    padding: 0.3rem 0.75rem;
+    border-radius: 20px;
+    border: 1px solid var(--border);
+  }
+  .count-badge span { font-weight: 600; color: var(--text); }
+
+  /* ── TABLE WRAPPER ── */
+  .table-wrap {
+    max-width: 1400px;
+    margin: 0 auto 2rem;
+    padding: 0 2rem;
+  }
+  .table-scroll {
+    background: var(--surface);
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+  }
+
+  table {
+    border-collapse: collapse;
+    width: max-content;
+    min-width: 100%;
+  }
+
+  /* ── GROUP HEADERS (row 1) ── */
+  .th-group {
+    font-family: 'Bricolage Grotesque', sans-serif;
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    padding: 0.6rem 0.5rem;
+    text-align: center;
+    border-bottom: 1px solid rgba(255,255,255,0.15);
+  }
+  .th-group.company-group {
+    background: #2A2A2A;
+    color: rgba(255,255,255,0.7);
+    border-right: 2px solid rgba(255,255,255,0.1);
+    min-width: 220px;
+    text-align: left;
+    padding-left: 1rem;
+  }
+  .th-group.sthlm-group {
+    background: var(--blue);
+    color: rgba(255,255,255,0.85);
+  }
+  .th-group.other-group {
+    background: #404040;
+    color: rgba(255,255,255,0.7);
+  }
+
+  /* ── CITY HEADERS (row 2) ── */
+  th.city {
+    width: var(--col-w);
+    min-width: var(--col-w);
+    max-width: var(--col-w);
+    padding: 0.5rem 0;
+    vertical-align: bottom;
+    border-bottom: 2px solid var(--border);
+  }
+  th.city .city-inner {
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.72rem;
+    font-weight: 500;
+    color: #fff;
+    padding: 0.4rem 0.2rem;
+    white-space: nowrap;
+    height: 90px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    user-select: none;
+    transition: opacity 0.15s;
+  }
+  th.city .city-inner:hover { opacity: 0.8; }
+  th.city.sthlm-city { background: var(--blue); }
+  th.city.adj-city   { background: var(--green); }
+  th.city.other-city { background: #404040; }
+  th.city.highlighted { outline: 3px solid #FFE699; outline-offset: -2px; }
+
+  th.company-th {
+    background: #2A2A2A;
+    color: rgba(255,255,255,0.9);
+    font-family: 'Bricolage Grotesque', sans-serif;
+    font-size: 0.78rem;
+    font-weight: 600;
+    text-align: left;
+    padding: 0.6rem 1rem;
+    min-width: 220px;
+    border-right: 2px solid rgba(255,255,255,0.1);
+    border-bottom: 2px solid var(--border);
+    white-space: nowrap;
+    position: sticky;
+    left: 0;
+    z-index: 10;
+  }
+
+  /* ── DATA ROWS ── */
+  tr.company-row { transition: background 0.05s; }
+  tr.company-row.hidden { display: none; }
+
+  /* Chess crosshair hover - inset shadow overlays without replacing background color */
+  tr.company-row.row-hover td { box-shadow: inset 0 0 0 100px rgba(46,117,182,0.1); }
+  tr.company-row.row-hover td.name-cell { box-shadow: inset 0 0 0 100px rgba(46,117,182,0.1); border-left: 3px solid var(--blue); }
+  td.col-hover { box-shadow: inset 0 0 0 100px rgba(46,117,182,0.1); }
+  td.cell-active { box-shadow: inset 0 0 0 100px rgba(220,160,0,0.45); outline: 2px solid rgba(200,150,0,0.8); outline-offset: -2px; position: relative; z-index: 2; }
+
+  tr.company-row:nth-child(even) td.name-cell { background: #F7F7F7; }
+  tr.company-row:nth-child(odd)  td.name-cell { background: #FFFFFF; }
+  tr.company-row:nth-child(even) td.empty-cell { background: #FAFAFA; }
+  tr.company-row:nth-child(odd)  td.empty-cell { background: #FFFFFF; }
+
+  td {
+    border-bottom: 1px solid var(--border);
+    font-size: 0.8rem;
+    height: 36px;
+  }
+  td.name-cell {
+    padding: 0 1rem;
+    font-size: 0.82rem;
+    white-space: nowrap;
+    border-right: 2px solid var(--border);
+    position: sticky;
+    left: 0;
+    z-index: 5;
+    transition: background 0.1s;
+    min-width: 220px;
+  }
+  td.name-cell.do-not-contact {
+    color: var(--red);
+    font-style: italic;
+    text-decoration: line-through;
+  }
+
+  td.check-cell {
+    width: var(--col-w);
+    min-width: var(--col-w);
+    max-width: var(--col-w);
+    text-align: center;
+    vertical-align: middle;
+    font-size: 0.85rem;
+    font-weight: 600;
+    border-right: 1px solid rgba(0,0,0,0.05);
+  }
+  td.check-cell.confirmed-sthlm { background: var(--blue);  color: #fff; }
+  td.check-cell.confirmed       { background: var(--green2); color: #fff; }
+  td.check-cell.adjacent        { background: var(--adj);    color: var(--adj-dk); }
+  td.check-cell.empty-cell      { }
+
+  /* ── SEPARATOR after Sollentuna ── */
+  td.sep-right, th.sep-right { border-right: 3px solid var(--border) !important; }
+
+  /* ── HIGHLIGHTED COLUMN ── */
+  td.col-highlight { background: rgba(255,230,100,0.15) !important; }
+
+  /* ── LEGEND ── */
+  .legend {
+    max-width: 1400px;
+    margin: 0 auto 3rem;
+    padding: 0 2rem;
+    display: flex;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  .legend-label { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); font-weight: 500; }
+  .legend-item { display: flex; align-items: center; gap: 0.5rem; }
+  .legend-swatch {
+    width: 28px; height: 22px;
+    border-radius: 4px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.75rem; font-weight: 700;
+  }
+  .legend-text { font-size: 0.78rem; color: var(--text); }
+  .legend-item .ls-sthlm   { background: var(--blue);  color: #fff; }
+  .legend-item .ls-confirm { background: var(--green2); color: #fff; }
+  .legend-item .ls-adj     { background: var(--adj);    color: var(--adj-dk); border: 1px solid #b0d090; }
+  .legend-item .ls-none    { background: #F0F0F0;       color: var(--muted);  border: 1px solid var(--border); }
+  .legend-item .ls-dnc     { color: var(--red); font-style: italic; text-decoration: line-through; font-size: 0.82rem; }
+
+  @media (max-width: 700px) {
+    header { padding: 1.25rem 1rem 1rem; }
+    header h1 { font-size: 1.4rem; }
+    header p { font-size: 0.78rem; }
+
+    .stats-bar { padding: 0.75rem 1rem; overflow-x: auto; }
+    .stats-bar > div { gap: 1.25rem; flex-wrap: nowrap; min-width: max-content; }
+    .stat-num { font-size: 1.1rem; }
+    .stat-label { font-size: 0.65rem; }
+
+    .controls {
+      padding: 0.75rem 1rem;
+      gap: 0.6rem;
+      flex-direction: column;
+      align-items: stretch;
+    }
+    .search-wrap { flex: none; width: 100%; }
+    #search { font-size: 1rem; padding: 0.6rem 0.75rem 0.6rem 2.2rem; }
+    .filter-group { flex-wrap: wrap; }
+    .filter-btn { font-size: 0.8rem; padding: 0.4rem 0.9rem; }
+    .count-badge { margin-left: 0; align-self: flex-start; }
+
+    .table-wrap { padding: 0; border-radius: 0; }
+    .table-scroll { border-radius: 0; border-left: none; border-right: none; }
+
+    /* Shrink company name column on mobile */
+    td.name-cell, th.company-th { min-width: 140px; font-size: 0.75rem; }
+    th.company-th { font-size: 0.72rem; }
+
+    /* Shrink city columns */
+    :root { --col-w: 30px; }
+    th.city .city-inner { height: 70px; font-size: 0.62rem; }
+
+    .legend {
+      padding: 0.75rem 1rem;
+      gap: 0.75rem;
+      flex-direction: column;
+      align-items: flex-start;
+      margin-bottom: 2rem;
+    }
+    .legend-item { gap: 0.4rem; }
+    .legend-swatch { width: 24px; height: 20px; font-size: 0.7rem; }
+    .legend-text { font-size: 0.75rem; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <h1>Städföretag i Sverige</h1>
+    <p>Översikt över städföretag och deras verksamhetsorter</p>
+  </div>
+</header>
+
+<div class="stats-bar">
+  <div>
+    <div class="stat"><span class="stat-num" id="stat-total">0</span><span class="stat-label">Företag</span></div>
+    <div class="stat"><span class="stat-num" id="stat-sthlm">0</span><span class="stat-label">I Stockholm</span></div>
+    <div class="stat"><span class="stat-num" id="stat-cities">22</span><span class="stat-label">Kommuner</span></div>
+    <div class="stat"><span class="stat-num" id="stat-visible">0</span><span class="stat-label">Visas</span></div>
+  </div>
+</div>
+
+<div class="controls">
+  <div class="search-wrap">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+    <input type="text" id="search" placeholder="Sök företag eller kommun…">
+  </div>
+  <div class="filter-group">
+    <span class="filter-label">Filtrera:</span>
+    <button class="filter-btn active" data-filter="all">Alla</button>
+    <button class="filter-btn" data-filter="adj">Stockholmsgruppen</button>
+  </div>
+  <div class="count-badge"><span id="count-label">34</span> av 34 företag</div>
+</div>
+
+<div class="table-wrap">
+  <div class="table-scroll">
+    <table id="main-table">
+      <thead id="thead"></thead>
+      <tbody id="tbody"></tbody>
+    </table>
+  </div>
+</div>
+
+<div class="legend">
+  <span class="legend-label">Förklaring</span>
+  <div class="legend-item"><div class="legend-swatch ls-sthlm">✓</div><span class="legend-text">Verksam i Stockholm</span></div>
+  <div class="legend-item"><div class="legend-swatch ls-confirm">✓</div><span class="legend-text">Verksam i kommunen</span></div>
+  <div class="legend-item"><div class="legend-swatch ls-adj">~</div><span class="legend-text">Täcks via Stockholmsverksamhet</span></div>
+  <div class="legend-item"><div class="legend-swatch ls-none"></div><span class="legend-text">Ej verksam</span></div>
+  <div class="legend-item"><span class="ls-dnc">Röd genomstruken</span>&nbsp;<span class="legend-text">= Kontakta inte</span></div>
+</div>
+
+<script>
+const CITIES = [
+  {name:'Stockholm', type:'sthlm'},
+  {name:'Järfälla',  type:'adj'},
+  {name:'Huddinge',  type:'adj'},
+  {name:'Sollentuna',type:'adj'},
+  {name:'Eslöv',     type:'other'},
+  {name:'Falkenberg',type:'other'},
+  {name:'Gävle',     type:'other'},
+  {name:'Göteborg',  type:'other'},
+  {name:'Hallsberg', type:'other'},
+  {name:'Katrineholm',type:'other'},
+  {name:'Kiruna',    type:'other'},
+  {name:'Kungälv',   type:'other'},
+  {name:'Landskrona',type:'other'},
+  {name:'Lund',      type:'other'},
+  {name:'Oskarshamn',type:'other'},
+  {name:'Sandviken', type:'other'},
+  {name:'Skara',     type:'other'},
+  {name:'Skövde',    type:'other'},
+  {name:'Stenungsund',type:'other'},
+  {name:'Södertälje',type:'other'},
+  {name:'Varberg',   type:'other'},
+  {name:'Östersund', type:'other'},
+];
+
+// Data: [name, do_not_contact, {city: 'confirmed'|'adjacent'}]
+const COMPANIES = [
+  ['Bettys', false, {Stockholm:'confirmed',Järfälla:'adjacent',Huddinge:'adjacent',Sollentuna:'adjacent',Göteborg:'confirmed',Gävle:'confirmed',Kungälv:'confirmed',Lund:'confirmed',Södertälje:'confirmed'}],
+  ['Hjälp Hemma', false, {Stockholm:'confirmed',Järfälla:'adjacent',Huddinge:'adjacent',Sollentuna:'adjacent',Göteborg:'confirmed'}],
+  ['Sverige&Co', false, {Göteborg:'confirmed',Stenungsund:'confirmed'}],
+  ['Hemfrid', false, {Stockholm:'confirmed',Göteborg:'confirmed',Falkenberg:'confirmed',Gävle:'confirmed',Katrineholm:'confirmed',Lund:'confirmed',Skövde:'confirmed',Varberg:'confirmed'}],
+  ['Galaxy Städservice', false, {Östersund:'confirmed'}],
+  ['Cleanwise', false, {Östersund:'confirmed'}],
+  ['Paulz Städ AB', false, {Östersund:'confirmed'}],
+  ['LDK Clean AB', false, {Eslöv:'confirmed',Landskrona:'confirmed',Lund:'confirmed'}],
+  ['Super Städ Norrbotten AB', false, {Kiruna:'confirmed'}],
+  ['Aurora Städ (kontakta inte)', true, {Gävle:'confirmed',Sandviken:'confirmed'}],
+  ['RentAV', false, {Östersund:'confirmed',Kiruna:'confirmed'}],
+  ['Spotless Städservice', false, {Kiruna:'confirmed'}],
+  ['Ha-Ren Städservice', false, {Oskarshamn:'confirmed'}],
+  ['Clean Städ i Oskarshamn AB', false, {Oskarshamn:'confirmed'}],
+  ['Klara Städ', false, {Stockholm:'confirmed',Järfälla:'adjacent',Huddinge:'adjacent',Sollentuna:'adjacent',Gävle:'confirmed',Katrineholm:'confirmed'}],
+  ['Städpulsen', false, {Stockholm:'confirmed',Järfälla:'adjacent',Huddinge:'adjacent',Sollentuna:'adjacent',Göteborg:'confirmed',Södertälje:'confirmed'}],
+  ['Homemaid', false, {Stockholm:'confirmed',Järfälla:'adjacent',Huddinge:'adjacent',Sollentuna:'adjacent',Göteborg:'confirmed',Falkenberg:'confirmed',Gävle:'confirmed',Kungälv:'confirmed',Landskrona:'confirmed',Lund:'confirmed',Varberg:'confirmed'}],
+  ['HelloClean', false, {Stockholm:'confirmed',Järfälla:'adjacent',Huddinge:'adjacent',Sollentuna:'adjacent'}],
+  ['Klart & Fint', false, {Hallsberg:'confirmed'}],
+  ['Trolltinas Allservice', false, {Hallsberg:'confirmed'}],
+  ['55Plus', false, {Stockholm:'confirmed',Järfälla:'confirmed',Huddinge:'confirmed',Sollentuna:'confirmed',Göteborg:'confirmed',Eslöv:'confirmed',Falkenberg:'confirmed',Kungälv:'confirmed',Landskrona:'confirmed',Lund:'confirmed',Oskarshamn:'confirmed',Skara:'confirmed',Varberg:'confirmed'}],
+  ['Dammråttan', false, {Skara:'confirmed',Skövde:'confirmed'}],
+  ['Hemtrevligt', false, {Skara:'confirmed',Skövde:'confirmed'}],
+  ['The Pink Städservice', false, {Skara:'confirmed',Skövde:'confirmed'}],
+  ['SEM Städ & Flytt', false, {Stockholm:'confirmed',Järfälla:'adjacent',Sollentuna:'adjacent',Göteborg:'confirmed',Falkenberg:'confirmed',Gävle:'confirmed',Landskrona:'confirmed',Lund:'confirmed',Skara:'confirmed',Skövde:'confirmed',Varberg:'confirmed'}],
+  ['Stora Höga Hemservice', false, {Stenungsund:'confirmed'}],
+  ['Rönnäng Industritjänst AB', false, {Kiruna:'confirmed',Stenungsund:'confirmed'}],
+  ['Qleano', false, {Stockholm:'confirmed',Järfälla:'adjacent',Huddinge:'adjacent',Sollentuna:'adjacent',Göteborg:'confirmed',Gävle:'confirmed',Sandviken:'confirmed',Södertälje:'confirmed'}],
+  ['Mellansvenska Städ AB', false, {Stockholm:'confirmed',Järfälla:'adjacent',Huddinge:'adjacent',Sollentuna:'adjacent',Göteborg:'confirmed',Östersund:'confirmed',Gävle:'confirmed',Sandviken:'confirmed'}],
+  ['Flytthem', false, {Stockholm:'confirmed',Järfälla:'confirmed',Huddinge:'confirmed',Sollentuna:'confirmed',Gävle:'confirmed',Katrineholm:'confirmed',Sandviken:'confirmed',Södertälje:'confirmed'}],
+  ['mittstäd', false, {Östersund:'confirmed',Kiruna:'confirmed'}],
+  ['Acke Städ & Expressleverans AB', false, {Kiruna:'confirmed'}],
+  ['Serve hem & företagsservice', false, {Kiruna:'confirmed'}],
+  ['Coor', false, {Stockholm:'confirmed',Järfälla:'adjacent',Huddinge:'adjacent',Sollentuna:'adjacent',Göteborg:'confirmed',Östersund:'confirmed',Gävle:'confirmed',Kiruna:'confirmed',Lund:'confirmed',Oskarshamn:'confirmed',Skövde:'confirmed'}],
+];
+
+let highlightedCol = null;
+let activeFilter = 'all';
+
+function buildTable() {
+  const thead = document.getElementById('thead');
+  const tbody = document.getElementById('tbody');
+  thead.innerHTML = '';
+  tbody.innerHTML = '';
+
+  // Row 1: group headers
+  const r1 = document.createElement('tr');
+
+  const compGrp = document.createElement('th');
+  compGrp.className = 'th-group company-group';
+  compGrp.textContent = 'Städföretag';
+  compGrp.setAttribute('rowspan','1');
+  r1.appendChild(compGrp);
+
+  // Stockholm group (4 cols)
+  const sthlmGrp = document.createElement('th');
+  sthlmGrp.className = 'th-group sthlm-group sep-right';
+  sthlmGrp.colSpan = 4;
+  sthlmGrp.textContent = 'Stockholmsgruppen';
+  r1.appendChild(sthlmGrp);
+
+  // Others group
+  const otherGrp = document.createElement('th');
+  otherGrp.className = 'th-group other-group';
+  otherGrp.colSpan = CITIES.length - 4;
+  otherGrp.textContent = 'Övriga kommuner';
+  r1.appendChild(otherGrp);
+  thead.appendChild(r1);
+
+  // Row 2: city headers
+  const r2 = document.createElement('tr');
+  const compTh = document.createElement('th');
+  compTh.className = 'company-th';
+  compTh.textContent = 'Företag';
+  r2.appendChild(compTh);
+
+  CITIES.forEach((city, i) => {
+    const th = document.createElement('th');
+    th.className = 'city ' + (city.type === 'sthlm' ? 'sthlm-city' : city.type === 'adj' ? 'adj-city' : 'other-city');
+    if (i === 3) th.classList.add('sep-right');
+    if (highlightedCol === city.name) th.classList.add('highlighted');
+    th.dataset.city = city.name;
+
+    const inner = document.createElement('div');
+    inner.className = 'city-inner';
+    inner.textContent = city.name;
+    inner.title = 'Klicka för att markera kolumnen';
+    inner.addEventListener('click', () => {
+      highlightedCol = highlightedCol === city.name ? null : city.name;
+      buildTable();
+    });
+    th.appendChild(inner);
+    r2.appendChild(th);
+  });
+  thead.appendChild(r2);
+
+  // Data rows
+  let visibleCount = 0;
+  let sthlmCount = 0;
+
+  COMPANIES.forEach(([name, dnc, coverage]) => {
+    const tr = document.createElement('tr');
+    tr.className = 'company-row';
+    tr.dataset.name = name.toLowerCase();
+    tr.dataset.coverage = JSON.stringify(coverage);
+
+    // Company name cell
+    const nameTd = document.createElement('td');
+    nameTd.className = 'name-cell' + (dnc ? ' do-not-contact' : '');
+    nameTd.textContent = name;
+    tr.appendChild(nameTd);
+
+    // City cells
+    CITIES.forEach((city, i) => {
+      const td = document.createElement('td');
+      const status = coverage[city.name];
+      td.className = 'check-cell';
+      if (i === 3) td.classList.add('sep-right');
+      if (highlightedCol === city.name) td.classList.add('col-highlight');
+
+      if (status === 'confirmed') {
+        td.classList.add(city.type === 'sthlm' ? 'confirmed-sthlm' : 'confirmed');
+        td.textContent = '✓';
+      } else if (status === 'adjacent') {
+        td.classList.add('adjacent');
+        td.textContent = '~';
+      } else {
+        td.classList.add('empty-cell');
+      }
+      tr.appendChild(td);
+    });
+
+    tbody.appendChild(tr);
+    if (coverage['Stockholm']) sthlmCount++;
+  });
+
+  // Update stats
+  document.getElementById('stat-total').textContent = COMPANIES.length;
+  document.getElementById('stat-sthlm').textContent = sthlmCount;
+
+  applyFilters();
+}
+
+const CITY_NAMES_LOWER = CITIES.map(c => c.name.toLowerCase());
+
+function applyFilters() {
+  const searchVal = document.getElementById('search').value.toLowerCase().trim();
+  const rows = document.querySelectorAll('.company-row');
+  let visible = 0;
+
+  // Check if the search term matches a city name
+  const matchedCity = searchVal
+    ? CITIES.find(c => c.name.toLowerCase().includes(searchVal))
+    : null;
+
+  rows.forEach(row => {
+    const name = row.dataset.name;
+    const coverage = JSON.parse(row.dataset.coverage);
+    let show = true;
+
+    if (searchVal) {
+      const matchesCompany = name.includes(searchVal);
+      const matchesCitySearch = matchedCity && coverage[matchedCity.name];
+      if (!matchesCompany && !matchesCitySearch) show = false;
+    }
+
+    if (activeFilter === 'adj' && !(['Stockholm','Järfälla','Huddinge','Sollentuna'].some(c => coverage[c]))) show = false;
+
+    row.classList.toggle('hidden', !show);
+    if (show) visible++;
+  });
+
+  document.getElementById('stat-visible').textContent = visible;
+  document.getElementById('count-label').textContent = visible + ' av ' + COMPANIES.length;
+
+  // Update col-hover after filter changes
+  reapplyColHover();
+}
+
+let hoveredColIdx = -1;
+
+function reapplyColHover() {
+  if (hoveredColIdx < 0) return;
+  document.querySelectorAll('.col-hover').forEach(c => c.classList.remove('col-hover'));
+  document.querySelectorAll('.company-row:not(.hidden)').forEach(row => {
+    if (row.cells[hoveredColIdx]) row.cells[hoveredColIdx].classList.add('col-hover');
+  });
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  buildTable();
+
+  document.getElementById('search').addEventListener('input', applyFilters);
+
+  document.querySelectorAll('.filter-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      activeFilter = btn.dataset.filter;
+      applyFilters();
+    });
+  });
+
+  // Chess crosshair hover
+  const tbody = document.getElementById('tbody');
+
+  tbody.addEventListener('mouseover', (e) => {
+    const td = e.target.closest('td');
+    if (!td) return;
+    const tr = td.closest('tr');
+    if (!tr || !tr.classList.contains('company-row')) return;
+
+    const cells = Array.from(tr.cells);
+    const colIdx = cells.indexOf(td);
+
+    // Row highlight
+    document.querySelectorAll('.row-hover').forEach(r => r.classList.remove('row-hover'));
+    tr.classList.add('row-hover');
+
+    // Col highlight (only if changed)
+    if (colIdx !== hoveredColIdx) {
+      document.querySelectorAll('.col-hover').forEach(c => c.classList.remove('col-hover'));
+      hoveredColIdx = colIdx;
+      document.querySelectorAll('.company-row:not(.hidden)').forEach(row => {
+        if (row.cells[colIdx]) row.cells[colIdx].classList.add('col-hover');
+      });
+    }
+
+    // Intersection
+    document.querySelectorAll('.cell-active').forEach(c => c.classList.remove('cell-active'));
+    td.classList.add('cell-active');
+  });
+
+  tbody.addEventListener('mouseleave', () => {
+    document.querySelectorAll('.row-hover').forEach(r => r.classList.remove('row-hover'));
+    document.querySelectorAll('.col-hover').forEach(c => c.classList.remove('col-hover'));
+    document.querySelectorAll('.cell-active').forEach(c => c.classList.remove('cell-active'));
+    hoveredColIdx = -1;
+  });
+});
+</script>
+</body>
+</html>
