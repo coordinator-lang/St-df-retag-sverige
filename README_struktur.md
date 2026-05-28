@@ -10,7 +10,8 @@ Nordicta Internal Website/
 ├── jourschema/
 │   ├── jourschema_v1.0.html    ← original (innan ombyggnad)
 │   ├── jourschema_v2.0.html    ← 3-kolumnslayout (stor ändring)
-│   └── jourschema_v2.1.html    ← + klickbara veckor (liten ändring)  ← AKTUELL
+│   ├── jourschema_v2.1.html    ← + klickbara veckor i kalendern (liten ändring)
+│   └── jourschema_v3.0.html    ← Kommande veckor: majoritet/klick/scroll + sticky sidokolumner (stor ändring)  ← AKTUELL
 │
 ├── Städföretag/
 │   └── Städföretag_v5.html
@@ -29,7 +30,7 @@ inte i en undermapp; då slutar den fungera som naturlig ingång.)
 ## Hur länkarna fungerar nu
 
 - Startsidans kort pekar in i undermapparna, t.ex.
-  `jourschema/jourschema_v2.1.html`.
+  `jourschema/jourschema_v3.0.html`.
 - Varje undersida länkar tillbaka till startsidan med `../index.html`
   (en nivå upp).
 
@@ -52,6 +53,7 @@ Behåll de gamla filerna i mappen som arkiv – då kan man alltid gå tillbaka.
 | v1.0 | Original | – |
 | v2.0 | Kalendern i mitten, "Kommande veckor" + "Storhelger" på sidorna | Stor |
 | v2.1 | Hela veckor klickbara (klick på veckonummer byter jour för hela veckan) | Liten |
+| v3.0 | "Kommande veckor" speglar kalendern (majoritetsfärg), raderna klickbara, scrollbar lista med ~35 veckor (täcker upp till v53). Sidokolumner (Kommande veckor + Storhelger) följer med vid scroll genom kalendern. | Stor |
 
 De andra sidorna behåller sin befintliga numrering (Städföretag v5, Protokoll v4, Inventarielista v1.0).
 Nästa ändring på dem följer samma system (t.ex. v5 → v5.1 vid liten ändring).
