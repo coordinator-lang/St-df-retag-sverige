@@ -13,7 +13,8 @@ Nordicta Internal Website/
 │   ├── jourschema_v2.0.html    ← 3-kolumnslayout (stor ändring)
 │   ├── jourschema_v2.1.html    ← + klickbara veckor i kalendern (liten ändring)
 │   ├── jourschema_v3.0.html    ← Kommande veckor: majoritet/klick/scroll + sticky sidokolumner (stor ändring)
-│   └── jourschema_v3.1.html    ← unified header (liten ändring)  ← AKTUELL
+│   ├── jourschema_v3.1.html    ← unified header (liten ändring)
+│   └── jourschema_v4.0.html    ← redigeringslås (flytande lås, auto-lås 30s) (stor ändring)  ← AKTUELL
 │
 ├── Städföretag/
 │   ├── Städföretag_v5.html     ← original
@@ -35,7 +36,7 @@ inte i en undermapp; då slutar den fungera som naturlig ingång.)
 ## Hur länkarna fungerar nu
 
 - Startsidans kort pekar in i undermapparna, t.ex.
-  `jourschema/jourschema_v3.1.html`.
+  `jourschema/jourschema_v4.0.html`.
 - Varje undersida länkar tillbaka till startsidan med `../index.html`
   (en nivå upp).
 
@@ -60,6 +61,7 @@ Behåll de gamla filerna i mappen som arkiv – då kan man alltid gå tillbaka.
 | v2.1 | Hela veckor klickbara (klick på veckonummer byter jour för hela veckan) | Liten |
 | v3.0 | "Kommande veckor" speglar kalendern (majoritetsfärg), raderna klickbara, scrollbar lista med ~35 veckor (täcker upp till v53). Sidokolumner (Kommande veckor + Storhelger) följer med vid scroll genom kalendern. | Stor |
 | v3.1 | Unified header (matchar övriga sidor: centrerad bildlogo, Georgia h1, Städföretags bubble-decor) | Liten |
+| v4.0 | Redigeringslås: flytande lås-knapp, allt låst som standard, auto-lås efter 30s inaktivitet (timern förnyas vid varje ändring), manuell låsning | Stor |
 
 ### Versionshistorik – Städföretag
 | Version | Ändring | Typ |
