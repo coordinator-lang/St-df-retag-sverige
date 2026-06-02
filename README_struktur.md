@@ -27,10 +27,22 @@ Nordicta Internal Website/
 │   ├── Nordicta_Protocol_i_web_form_v4.html     ← original
 │   └── Nordicta_Protocol_i_web_form_v4.1.html   ← unified header (liten ändring)  ← AKTUELL
 │
-└── Inventarielista/
-    ├── inventarie_v1.0.html    ← original
-    └── inventarie_v1.1.html    ← unified header (liten ändring)  ← AKTUELL
+├── Inventarielista/
+│   ├── inventarie_v1.0.html    ← original
+│   └── inventarie_v1.1.html    ← unified header (liten ändring)  ← AKTUELL
+│
+├── Forslag/                              ← Förbättringsförslag (Workflow Suggestions)
+│   ├── forslag_v1.1.html        ← formuläret (skriv-sidan, egen lila/guld-stil)  ← AKTUELL
+│   └── forslag-viewer_v1.0.html ← viewern (läs-sidan, portal-stil, boxar)  ← AKTUELL
+│
+└── Anvandbar_information/
+    └── anvandbar-information_v1.1.html  ← referenssida i portal-stil (platshållare)  ← AKTUELL
 ```
+
+> **Förslags-funktionen (Forslag/) använder Supabase** — samma projekt som resten
+> av sajten. Tabellen `workflow_suggestions` måste skapas en gång (SQL i HANDOFF-
+> briefen). Formuläret faller tillbaka till en lokal JSON-nedladdning om Supabase
+> inte är nåbar. Viewern är publikt läsbar via anon-nyckeln precis som övriga sidor.
 
 Varje sida har fått en egen mapp. **index.html ligger kvar i roten** eftersom
 det är startsidan – då fungerar den som nav och länkarna blir enklast. (Lägg den
@@ -87,9 +99,26 @@ Behåll de gamla filerna i mappen som arkiv – då kan man alltid gå tillbaka.
 | v1.0 | Original (första byggnad) | – |
 | v1.1 | Unified header | Liten |
 
+### Versionshistorik – Förbättringsförslag (Forslag)
+| Version | Ändring | Typ |
+|---|---|---|
+| forslag v1.1 | Formuläret (skriv-sidan). Egen lila/guld-stil — INTE portal-stil. Supabase-config ifylld, auth till apikey-only. | – |
+| viewer v1.0 | Viewern (läs-sidan). Portal-stil: unified header + boxar (klick → detaljpanel, döljer tomma fält). Länkar till formuläret. | – |
+
+### Versionshistorik – Användbar information
+| Version | Ändring | Typ |
+|---|---|---|
+| v1.1 | Referenssidans innehåll inlagt i portal-mallen (unified header/footer, portal-CSS). Alla tax/lag-värden är [PLATSHÅLLARE] tills en ägare fyller i från officiell källa. | – |
+
 ### Versionshistorik – index (startsidan)
 Index versioneras genom arkiverade kopior i roten (`index_v1.0.html`, `index_v1.1.html` etc.).
 Live-versionen ligger alltid som `index.html`.
+
+| Version | Ändring | Typ |
+|---|---|---|
+| v1.0 | Före unified header | – |
+| v1.1 | Unified header | Liten |
+| v1.2 | + kort för Förbättringsförslag och Användbar information | Liten |
 
 | Version | Ändring | Typ |
 |---|---|---|
