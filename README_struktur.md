@@ -33,7 +33,8 @@ Nordicta Internal Website/
 │
 ├── Forslag/                              ← Förbättringsförslag (Workflow Suggestions)
 │   ├── forslag_v1.1.html        ← formuläret (skriv-sidan, egen lila/guld-stil)  ← AKTUELL
-│   └── forslag-viewer_v1.0.html ← viewern (läs-sidan, portal-stil, boxar)  ← AKTUELL
+│   ├── forslag-viewer_v1.0.html ← viewern (läs-sidan, portal-stil, boxar)
+│   └── forslag-viewer_v1.1.html ← + ta bort-förslag med bekräftelse  ← AKTUELL
 │
 └── Anvandbar_information/
     └── anvandbar-information_v1.1.html  ← referenssida i portal-stil (platshållare)  ← AKTUELL
@@ -104,6 +105,7 @@ Behåll de gamla filerna i mappen som arkiv – då kan man alltid gå tillbaka.
 |---|---|---|
 | forslag v1.1 | Formuläret (skriv-sidan). Egen lila/guld-stil — INTE portal-stil. Supabase-config ifylld, auth till apikey-only. | – |
 | viewer v1.0 | Viewern (läs-sidan). Portal-stil: unified header + boxar (klick → detaljpanel, döljer tomma fält). Länkar till formuläret. | – |
+| viewer v1.1 | + Ta bort förslag: knapp i detaljpanelen → bekräftelsedialog ("är du säker") → Supabase DELETE. Kräver anon DELETE-policy. | Liten |
 
 ### Versionshistorik – Användbar information
 | Version | Ändring | Typ |
