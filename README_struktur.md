@@ -38,9 +38,16 @@ Nordicta Internal Website/
 │   ├── forslag-viewer_v1.1.html ← + ta bort-förslag med bekräftelse
 │   └── forslag-viewer_v1.2.html ← länkar till form v1.2  ← AKTUELL
 │
-└── Anvandbar_information/
-    └── anvandbar-information_v1.1.html  ← referenssida i portal-stil (platshållare)  ← AKTUELL
+├── Anvandbar_information/
+│   └── anvandbar-information_v1.1.html  ← referenssida i portal-stil (platshållare)  ← AKTUELL
+│
+└── Hyresvardsformular/
+    └── hyresvardsformular_v38.html      ← fristående hyresvärdsformulär (postar till Make-webhook)
 ```
+
+> **OBS – Hyresvardsformular/ är MEDVETET INTE länkad** från index eller någon
+> annan sida. Den hostas bara så att direkt-URL:en kan delas (t.ex. via WhatsApp)
+> och öppnas i en webbläsare. Lägg inte till ett portal-kort för den.
 
 > **Förslags-funktionen (Forslag/) använder Supabase** — samma projekt som resten
 > av sajten. Tabellen `workflow_suggestions` måste skapas en gång (SQL i HANDOFF-
