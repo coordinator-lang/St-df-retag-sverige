@@ -1568,7 +1568,7 @@ landlordForm.addEventListener('submit', async (e) => {
   if (payload.furnished === 'partially_furnished' && payload.partial_items_sv) structured.push('Delvis möblerat – ingår: ' + payload.partial_items_sv);
   if ((payload.available_from || '').trim())                                structured.push('Tillgänglig från: ' + payload.available_from.trim());
   if (flexSv)                                                               structured.push('Flexibilitet på hyrestid: ' + flexSv);
-  if (partialSv.length)                                                     structured.push('Driftkostnader – delvis inkluderat: ' + partialSv.join(', '));
+  // Delvis inkluderade driftkostnader ligger numera i egna Monday-kolumner (utility_*_amount) — visas inte längre i Övrig info.
   if (notInclSv.length)                                                     structured.push('Driftkostnader – ej inkluderat: ' + notInclSv.join(', '));
   if (beddingExtraSv.length)                                                structured.push('Sängutrustning – mot extra kostnad: ' + beddingExtraSv.join(', '));
   if (beddingNotSv.length)                                                  structured.push('Sängutrustning – ingår ej: ' + beddingNotSv.join(', '));
