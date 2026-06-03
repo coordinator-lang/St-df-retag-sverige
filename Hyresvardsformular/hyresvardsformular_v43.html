@@ -1406,30 +1406,40 @@ async function compressImage(file, maxDim = 1400, quality = 0.80) {
 // hidden fields stay empty — which makes Monday reject the Location column
 // ("(Intern) Plats"). Geocode the typed text via Photon as a fallback so the
 // coordinates get filled before we submit.
+async function geocodeQuery(q) {
+  try {
+    const url = 'https://photon.komoot.io/api/?lang=default&limit=1&q=' + encodeURIComponent(q);
+    const res = await fetch(url);
+    if (!res.ok) return null;
+    const f = ((await res.json()).features || [])[0];
+    const c = f && f.geometry && f.geometry.coordinates;
+    if (c && c[0] != null && c[1] != null) return { f, lng: String(c[0]), lat: String(c[1]) };
+  } catch (err) { /* ignore — caller handles a null result */ }
+  return null;
+}
+
 async function ensureCoordinates() {
   const addrEl = document.getElementById('autocomplete');
   const latEl  = document.getElementById('lat');
   const lngEl  = document.getElementById('lng');
-  const addr   = (addrEl && addrEl.value || '').trim();
-  if (!addr || (latEl.value && lngEl.value)) return; // nothing typed, or coords already set
-  try {
-    const url = 'https://photon.komoot.io/api/?lang=default&limit=1&q=' + encodeURIComponent(addr);
-    const res = await fetch(url);
-    if (!res.ok) return;
-    const f = ((await res.json()).features || [])[0];
-    const c = f && f.geometry && f.geometry.coordinates;
-    if (c && c[0] != null && c[1] != null) {
-      lngEl.value = String(c[0]);
-      latEl.value = String(c[1]);
-      const p = f.properties || {};
-      const cityEl    = document.getElementById('city');
-      const countryEl = document.getElementById('country');
-      const isoEl     = document.getElementById('country_iso');
-      if (cityEl    && !cityEl.value)    cityEl.value    = p.city || p.town || p.village || '';
-      if (countryEl && !countryEl.value) countryEl.value = p.country || '';
-      if (isoEl     && !isoEl.value)     isoEl.value     = (p.countrycode || '').toUpperCase();
-    }
-  } catch (err) { /* network/Photon failure — leave empty; Make guard handles it */ }
+  const raw    = (addrEl && addrEl.value || '').trim();
+  if (!raw || (latEl.value && lngEl.value)) return; // nothing typed, or coords already set
+  // Photon dislikes full strings with postcodes/commas — retry with cleaner queries.
+  const noPost  = raw.replace(/\b\d{3}\s?\d{2}\b/g, ' ').replace(/\s{2,}/g, ' ').trim(); // drop SE postcodes
+  const noComma = noPost.replace(/,/g, ' ').replace(/\s{2,}/g, ' ').trim();
+  const candidates = [...new Set([raw, noPost, noComma])].filter(Boolean);
+  let hit = null;
+  for (const q of candidates) { hit = await geocodeQuery(q); if (hit) break; }
+  if (!hit) return;
+  lngEl.value = hit.lng;
+  latEl.value = hit.lat;
+  const p = hit.f.properties || {};
+  const cityEl    = document.getElementById('city');
+  const countryEl = document.getElementById('country');
+  const isoEl     = document.getElementById('country_iso');
+  if (cityEl    && !cityEl.value)    cityEl.value    = p.city || p.town || p.village || '';
+  if (countryEl && !countryEl.value) countryEl.value = p.country || '';
+  if (isoEl     && !isoEl.value)     isoEl.value     = (p.countrycode || '').toUpperCase();
 }
 
 landlordForm.addEventListener('submit', async (e) => {
@@ -1437,6 +1447,22 @@ landlordForm.addEventListener('submit', async (e) => {
 
   // Fill lat/lng from the typed address if the visitor didn't pick a suggestion
   await ensureCoordinates();
+
+  // Monday's Location column "(Intern) Plats" requires coordinates. If the address
+  // still has none (typed something Photon can't resolve, no suggestion picked),
+  // stop and ask the visitor to pick from the dropdown — otherwise Monday rejects
+  // the whole item.
+  const addrInput = document.getElementById('autocomplete');
+  if (addrInput.value.trim() && (!document.getElementById('lat').value || !document.getElementById('lng').value)) {
+    const lang = document.querySelector('.lang-btn.active')?.dataset.lang || 'sv';
+    formStatus.className = 'status error';
+    formStatus.textContent = lang === 'en'
+      ? 'Please choose your address from the dropdown list that appears as you type, so we can pin the exact location.'
+      : 'Välj din adress från listan som dyker upp medan du skriver, så att vi får exakt plats.';
+    addrInput.focus();
+    addrInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    return;
+  }
 
   // ── BUILD JSON PAYLOAD ──
   // Send the whole submission as a single JSON body instead of multipart.
