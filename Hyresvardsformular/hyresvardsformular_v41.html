@@ -144,9 +144,16 @@ input[type=range]::-moz-range-thumb { width:20px; height:20px; border-radius:50%
   color:var(--muted); margin-bottom:12px;
 }
 .util-row {
-  display:flex; align-items:center; gap:10px;
+  display:flex; flex-wrap:wrap; align-items:center; gap:10px;
   margin-bottom:8px;
 }
+/* Per-utility hint shown under the amount box when "Delvis inkluderat" is chosen */
+.util-hint {
+  flex:0 0 100%; text-align:right;
+  font-size:11px; color:var(--muted); line-height:1.45;
+  margin:-2px 0 2px;
+}
+.util-hint[hidden] { display:none; }
 .util-row:last-of-type { margin-bottom:0; }
 .util-label {
   flex:0 0 80px; font-size:13px; color:var(--text);
@@ -196,6 +203,7 @@ input[type=range]::-moz-range-thumb { width:20px; height:20px; border-radius:50%
   .util-amount-group { flex:1 1 100%; margin-top:6px; justify-content:flex-end; }
   .util-amount-group input { flex:1; width:auto; }
   .util-currency { min-width:36px; text-align:left; }
+  .util-hint { text-align:left; }
 }
 
 /* AMENITIES */
@@ -568,6 +576,7 @@ footer { background:var(--purple); color:rgba(255,255,255,.6); padding:52px 48px
             <input type="number" name="utility_electricity_amount" min="0" max="9999" maxlength="4" placeholder="0"/>
             <span class="util-currency">SEK</span>
           </div>
+          <small class="util-hint" data-util="electricity" id="t-util-hint-el" hidden>Om ni har en fast summa för denna driftkostnad.</small>
         </div>
 
         <div class="util-row" data-util="heating">
@@ -582,6 +591,7 @@ footer { background:var(--purple); color:rgba(255,255,255,.6); padding:52px 48px
             <input type="number" name="utility_heating_amount" min="0" max="9999" maxlength="4" placeholder="0"/>
             <span class="util-currency">SEK</span>
           </div>
+          <small class="util-hint" data-util="heating" id="t-util-hint-heat" hidden>Om ni har en fast summa för denna driftkostnad.</small>
         </div>
 
         <div class="util-row" data-util="internet">
@@ -596,6 +606,7 @@ footer { background:var(--purple); color:rgba(255,255,255,.6); padding:52px 48px
             <input type="number" name="utility_internet_amount" min="0" max="9999" maxlength="4" placeholder="0"/>
             <span class="util-currency">SEK</span>
           </div>
+          <small class="util-hint" data-util="internet" id="t-util-hint-internet" hidden>Om ni har en fast summa för denna driftkostnad.</small>
         </div>
 
         <div class="util-row" data-util="water">
@@ -610,6 +621,7 @@ footer { background:var(--purple); color:rgba(255,255,255,.6); padding:52px 48px
             <input type="number" name="utility_water_amount" min="0" max="9999" maxlength="4" placeholder="0"/>
             <span class="util-currency">SEK</span>
           </div>
+          <small class="util-hint" data-util="water" id="t-util-hint-water" hidden>Om ni har en fast summa för denna driftkostnad.</small>
         </div>
 
         <p class="utilities-helper" id="t-util-helper">Om kostnader är inkluderade gäller detta normalt bruk. Vid överförbrukning av hyresgästen kan extra debitering ske, varpå hyresvärden ersätts för den extra kostnaden.</p>
@@ -837,6 +849,10 @@ const T = {
     'util-block':'Driftkostnader','util-el':'El','util-heat':'Värme','util-internet':'Internet','util-water':'Vatten',
     'util-opt-':'Välj','util-opt-included':'Inkluderat','util-opt-partial':'Delvis inkluderat','util-opt-not_included':'Ej inkluderat',
     'util-helper':'Om kostnader är inkluderade gäller detta normalt bruk. Vid överförbrukning av hyresgästen kan extra debitering ske, varpå hyresvärden ersätts för den extra kostnaden.',
+    'util-hint-el':'Om ni har en fast summa för denna driftkostnad.',
+    'util-hint-heat':'Om ni har en fast summa för denna driftkostnad.',
+    'util-hint-internet':'Om ni har en fast summa för denna driftkostnad.',
+    'util-hint-water':'Om ni har en fast summa för denna driftkostnad.',
     'am-wifi':'Wi-Fi','am-tv':'TV','am-dish':'Diskmaskin','am-wash':'Tvättmaskin',
     'am-park':'Parkering','am-balc':'Balkong','am-lift':'Hiss','am-stor':'Förråd','am-bike':'Cykelförvaring',
     'am-kitchen':'Kök','am-kitchenette':'Trinettkök','am-microwave':'Mikrovågsugn','am-laundry':'Tvättstuga','am-cleaning':'Städredskap',
@@ -882,6 +898,10 @@ const T = {
     'util-block':'Utility costs','util-el':'Electricity','util-heat':'Heating','util-internet':'Internet','util-water':'Water',
     'util-opt-':'Select','util-opt-included':'Included','util-opt-partial':'Partially included','util-opt-not_included':'Not included',
     'util-helper':'If utilities are included, this applies to normal use. In case of excessive use by the tenant, additional charges may apply, with the landlord reimbursed for the extra cost.',
+    'util-hint-el':'If you have a fixed amount for this utility cost.',
+    'util-hint-heat':'If you have a fixed amount for this utility cost.',
+    'util-hint-internet':'If you have a fixed amount for this utility cost.',
+    'util-hint-water':'If you have a fixed amount for this utility cost.',
     'am-wifi':'Wi-Fi','am-tv':'TV','am-dish':'Dishwasher','am-wash':'Washing machine',
     'am-park':'Parking','am-balc':'Balcony','am-lift':'Elevator','am-stor':'Storage','am-bike':'Bike storage',
     'am-kitchen':'Kitchen','am-kitchenette':'Kitchenette','am-microwave':'Microwave','am-laundry':'Laundry room','am-cleaning':'Cleaning supplies',
@@ -915,6 +935,7 @@ function applyLang(l) {
    'bed-duvet','bed-pillow','bed-sheets','bed-towels',
    'name','phone','email','ltype','company','addr','city','country','ptype','furn','bed','bedplaces','bath','show','desc',
    'rent-lbl','per-month','util-block','util-el','util-heat','util-internet','util-water','util-helper',
+   'util-hint-el','util-hint-heat','util-hint-internet','util-hint-water',
    'am-wifi','am-tv','am-kitchen','am-kitchenette','am-microwave','am-dish','am-wash','am-laundry','am-cleaning','am-park','am-balc','am-lift','am-stor','am-bike',
    'drop1','drop2','drop3','submit','size','floor','parking','consent','consent-link','note',
    'thanks-h','thanks-p','restart',
@@ -1057,11 +1078,14 @@ document.querySelector('input[type=tel]').addEventListener('paste', e => {
 function toggleUtilAmount(sel) {
   const utilKey = sel.dataset.util;
   const amountGroup = document.querySelector(`.util-amount-group[data-util="${utilKey}"]`);
+  const hint = document.querySelector(`.util-hint[data-util="${utilKey}"]`);
   if (!amountGroup) return;
   if (sel.value === 'partial') {
     amountGroup.hidden = false;
+    if (hint) hint.hidden = false;
   } else {
     amountGroup.hidden = true;
+    if (hint) hint.hidden = true;
     const inp = amountGroup.querySelector('input');
     if (inp) inp.value = '';
   }
@@ -1378,8 +1402,41 @@ async function compressImage(file, maxDim = 1400, quality = 0.80) {
   }
 }
 
+// If the visitor typed an address but never clicked a suggestion, the lat/lng
+// hidden fields stay empty — which makes Monday reject the Location column
+// ("(Intern) Plats"). Geocode the typed text via Photon as a fallback so the
+// coordinates get filled before we submit.
+async function ensureCoordinates() {
+  const addrEl = document.getElementById('autocomplete');
+  const latEl  = document.getElementById('lat');
+  const lngEl  = document.getElementById('lng');
+  const addr   = (addrEl && addrEl.value || '').trim();
+  if (!addr || (latEl.value && lngEl.value)) return; // nothing typed, or coords already set
+  try {
+    const url = 'https://photon.komoot.io/api/?lang=default&limit=1&q=' + encodeURIComponent(addr);
+    const res = await fetch(url);
+    if (!res.ok) return;
+    const f = ((await res.json()).features || [])[0];
+    const c = f && f.geometry && f.geometry.coordinates;
+    if (c && c[0] != null && c[1] != null) {
+      lngEl.value = String(c[0]);
+      latEl.value = String(c[1]);
+      const p = f.properties || {};
+      const cityEl    = document.getElementById('city');
+      const countryEl = document.getElementById('country');
+      const isoEl     = document.getElementById('country_iso');
+      if (cityEl    && !cityEl.value)    cityEl.value    = p.city || p.town || p.village || '';
+      if (countryEl && !countryEl.value) countryEl.value = p.country || '';
+      if (isoEl     && !isoEl.value)     isoEl.value     = (p.countrycode || '').toUpperCase();
+    }
+  } catch (err) { /* network/Photon failure — leave empty; Make guard handles it */ }
+}
+
 landlordForm.addEventListener('submit', async (e) => {
   e.preventDefault();
+
+  // Fill lat/lng from the typed address if the visitor didn't pick a suggestion
+  await ensureCoordinates();
 
   // ── BUILD JSON PAYLOAD ──
   // Send the whole submission as a single JSON body instead of multipart.
@@ -1394,9 +1451,12 @@ landlordForm.addEventListener('submit', async (e) => {
   // ── BILINGUAL AMENITIES ──
   // Emit both Swedish AND English amenity labels regardless of which UI language
   // the visitor used, so both Monday columns can be filled simultaneously.
-  const checked = landlordForm.querySelectorAll('.amenity input[type=checkbox]:checked');
-  payload.amenities_sv = [...checked].map(c => c.dataset.sv).join(', ');
-  payload.amenities_en = [...checked].map(c => c.dataset.en).join(', ');
+  // Exclude the "Delvis möblerat" checkboxes (inside #partial-furn-detail) — those
+  // belong only in Övrig info (extra_info), not in the amenity Tag columns.
+  const checked = [...landlordForm.querySelectorAll('.amenity input[type=checkbox]:checked')]
+    .filter(c => !c.closest('#partial-furn-detail'));
+  payload.amenities_sv = checked.map(c => c.dataset.sv).join(', ');
+  payload.amenities_en = checked.map(c => c.dataset.en).join(', ');
 
   // Which language version was the form filled in?
   payload.language = document.querySelector('.lang-btn.active')?.dataset.lang || 'sv';
@@ -1429,6 +1489,8 @@ landlordForm.addEventListener('submit', async (e) => {
   const includedEn = [];
   const partialSv = [];    // partial, with cost
   const partialEn = [];
+  const notInclSv = [];    // not included
+  const notInclEn = [];
   for (const u of utilDefs) {
     const statusSel = document.querySelector(`.util-status[data-util="${u.key}"]`);
     const status = statusSel ? statusSel.value : '';
@@ -1441,15 +1503,19 @@ landlordForm.addEventListener('submit', async (e) => {
       includedEn.push(u.en);
     } else if (status === 'partial') {
       const costSv = amount ? ` (${amount} ${payload.rent_currency})` : '';
-      const costEn = costSv; // same formatting in both languages
       partialSv.push(u.sv + costSv);
-      partialEn.push(u.en + costEn);
+      partialEn.push(u.en + costSv); // same cost formatting in both languages
+    } else if (status === 'not_included') {
+      notInclSv.push(u.sv);
+      notInclEn.push(u.en);
     }
   }
   payload.utilities_included_list_sv = includedSv.join(', ');
   payload.utilities_included_list_en = includedEn.join(', ');
   payload.utilities_partial_list_sv  = partialSv.join(', ');
   payload.utilities_partial_list_en  = partialEn.join(', ');
+  payload.utilities_notincluded_list_sv = notInclSv.join(', ');
+  payload.utilities_notincluded_list_en = notInclEn.join(', ');
   // Backward-compatible boolean: "yes" if ANY utility is fully or partially included
   payload.utilities_included = (includedSv.length || partialSv.length) ? 'yes' : 'no';
 
@@ -1460,6 +1526,56 @@ landlordForm.addEventListener('submit', async (e) => {
   const partialChecked = partialDetail.querySelectorAll('input[type=checkbox]:checked');
   payload.partial_items_sv = [...partialChecked].map(c => c.dataset.sv).join(', ');
   payload.partial_items_en = [...partialChecked].map(c => c.dataset.en).join(', ');
+
+  // ── BEDDING / LINEN (Möbleringsgrad-poster) ──
+  // "Ingår" (included)        → folded into the amenity Tag columns (both languages).
+  // "Finns mot extra kostnad" → goes into "Övrig info" as text (below).
+  // "Ingår ej"                → goes into "Övrig info" as text (below).
+  const beddingDefs = [
+    { id:'sel-duvet',  sv:'Täcken',     en:'Duvets' },
+    { id:'sel-pillow', sv:'Kuddar',     en:'Pillows' },
+    { id:'sel-sheets', sv:'Sängkläder', en:'Bed linen' },
+    { id:'sel-towels', sv:'Handdukar',  en:'Towels' }
+  ];
+  const beddingExtraSv = [];   // finns mot extra kostnad
+  const beddingNotSv   = [];   // ingår ej
+  const addAmenity = (listKey, label) => {
+    const cur = payload[listKey] ? payload[listKey].split(', ').filter(Boolean) : [];
+    if (!cur.includes(label)) { cur.push(label); payload[listKey] = cur.join(', '); }
+  };
+  for (const b of beddingDefs) {
+    const sel = document.getElementById(b.id);
+    const v = sel ? sel.value : '';
+    if (v === 'included') {
+      addAmenity('amenities_sv', b.sv);
+      addAmenity('amenities_en', b.en);
+    } else if (v === 'extra_cost') {
+      beddingExtraSv.push(b.sv);
+    } else if (v === 'not_included') {
+      beddingNotSv.push(b.sv);
+    }
+  }
+
+  // ── AVAILABILITY (datum + flexibilitet) → text för Övrig info ──
+  const flexMap = { flexible:'Flexibel', prefer_long:'Föredrar längre vistelser', only_long:'Endast längre perioder' };
+  const flexSv = flexMap[payload.flexibility] || '';
+
+  // ── ASSEMBLE "Övrig info" (intern, svenska) — ett snyggt textblock ──
+  // Make mappar denna kolumn direkt till {{1.extra_info}} (ersätter gammal concat).
+  const freeText = (payload.description || '').trim();
+  const structured = [];
+  if ((payload.floor || '').trim())                                         structured.push('Våning: ' + payload.floor.trim());
+  if (payload.furnished === 'partially_furnished' && payload.partial_items_sv) structured.push('Delvis möblerat – ingår: ' + payload.partial_items_sv);
+  if ((payload.available_from || '').trim())                                structured.push('Tillgänglig från: ' + payload.available_from.trim());
+  if (flexSv)                                                               structured.push('Flexibilitet på hyrestid: ' + flexSv);
+  if (partialSv.length)                                                     structured.push('Driftkostnader – delvis inkluderat: ' + partialSv.join(', '));
+  if (notInclSv.length)                                                     structured.push('Driftkostnader – ej inkluderat: ' + notInclSv.join(', '));
+  if (beddingExtraSv.length)                                                structured.push('Sängutrustning – mot extra kostnad: ' + beddingExtraSv.join(', '));
+  if (beddingNotSv.length)                                                  structured.push('Sängutrustning – ingår ej: ' + beddingNotSv.join(', '));
+  const infoParts = [];
+  if (freeText)           infoParts.push(freeText);
+  if (structured.length)  infoParts.push(structured.join('\n'));
+  payload.extra_info = infoParts.join('\n\n');
 
   // ── COMPRESS PHOTOS + ENCODE AS BASE64 ──
   // Each photo becomes {name, mime, data} in a proper JSON array — no more
