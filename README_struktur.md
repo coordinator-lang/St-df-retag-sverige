@@ -33,10 +33,12 @@ Nordicta Internal Website/
 │
 ├── Forslag/                              ← Förbättringsförslag (Workflow Suggestions)
 │   ├── forslag_v1.1.html        ← formuläret (skriv-sidan)
-│   ├── forslag_v1.2.html        ← + "See all suggestions"-knapp på tack-skärmen  ← AKTUELL
+│   ├── forslag_v1.2.html        ← + "See all suggestions"-knapp på tack-skärmen
+│   ├── forslag_v1.3.html        ← omstylad till portal-tema (header/IBM Plex/slate)  ← AKTUELL
 │   ├── forslag-viewer_v1.0.html ← viewern (läs-sidan, portal-stil, boxar)
 │   ├── forslag-viewer_v1.1.html ← + ta bort-förslag med bekräftelse
-│   └── forslag-viewer_v1.2.html ← länkar till form v1.2  ← AKTUELL
+│   ├── forslag-viewer_v1.2.html ← länkar till form v1.2
+│   └── forslag-viewer_v1.3.html ← länkar till form v1.3  ← AKTUELL
 │
 ├── Anvandbar_information/
 │   └── anvandbar-information_v1.1.html  ← referenssida i portal-stil (platshållare)  ← AKTUELL
@@ -114,9 +116,11 @@ Behåll de gamla filerna i mappen som arkiv – då kan man alltid gå tillbaka.
 |---|---|---|
 | forslag v1.1 | Formuläret (skriv-sidan). Egen lila/guld-stil — INTE portal-stil. Supabase-config ifylld, auth till apikey-only. | – |
 | forslag v1.2 | + "See all suggestions"-knapp på tack-skärmen (länkar till viewern). FORM_VERSION → v1.2. | Liten |
+| forslag v1.3 | Omstylad till portal-temat: unified header (huslogo, mörk bakgrund, orange linje), IBM Plex-typsnitt, slate/orange-palett. Samma fält + logik. FORM_VERSION → v1.3. | Liten |
 | viewer v1.0 | Viewern (läs-sidan). Portal-stil: unified header + boxar (klick → detaljpanel, döljer tomma fält). Länkar till formuläret. | – |
 | viewer v1.1 | + Ta bort förslag: knapp i detaljpanelen → bekräftelsedialog ("är du säker") → Supabase DELETE. Kräver anon DELETE-policy. | Liten |
 | viewer v1.2 | "+ Nytt förslag" pekar nu på form v1.2 (krosslänk). | Liten |
+| viewer v1.3 | "+ Nytt förslag" pekar nu på form v1.3 (krosslänk). | Liten |
 
 ### Versionshistorik – Användbar information
 | Version | Ändring | Typ |
