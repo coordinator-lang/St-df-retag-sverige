@@ -21,7 +21,8 @@ Nordicta Internal Website/
 │   ├── Städföretag_v5.1.html   ← unified header (liten ändring)
 │   ├── Städföretag_v5.2.html   ← + Staddags Sollentuna m.m. (liten ändring)
 │   ├── Städföretag_v5.3.html   ← kommuner + företag i bokstavsordning (liten ändring)
-│   └── Städföretag_v5.4.html   ← mobiloptimering: fryst namnkolumn (liten ändring)  ← AKTUELL
+│   ├── Städföretag_v5.4.html   ← mobiloptimering: fryst namnkolumn (liten ändring)
+│   └── Städföretag_v5.5.html   ← + telefon på Aurora Städ; telefon visas före note-märket (liten ändring)  ← AKTUELL
 │
 ├── Nordicta_Protocol/
 │   ├── Nordicta_Protocol_i_web_form_v4.html     ← original
@@ -100,6 +101,7 @@ Behåll de gamla filerna i mappen som arkiv – då kan man alltid gå tillbaka.
 | v5.2 | Lade till Staddags Sollentuna (Mohammed Raid) i Stockholmsgruppen; kompletterade Hemfrid + SEM Städ & Flytt med Stockholmsgrupp-täckning; fix av räknartext | Liten |
 | v5.3 | Alla kommuner (utom Stockholmsgruppen) och alla företag sorteras nu i bokstavsordning (svensk collation) | Liten |
 | v5.4 | Mobiloptimering: kompakt + fryst företagskolumn (namn wrappar, telefon på egen rad) så stadskolumnerna blir läsbara medan namnet alltid syns | Liten |
+| v5.5 | Lade till telefon (+46 76 079 60 26) på Aurora Städ; telefon-pillen renderas nu före note-märket ("Maries kontakt") | Liten |
 
 ### Versionshistorik – Nordicta_Protocol
 | Version | Ändring | Typ |
